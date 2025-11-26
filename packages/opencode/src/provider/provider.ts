@@ -137,6 +137,13 @@ export namespace Provider {
 
           let regionPrefix = region.split("-")[0]
 
+          // Claude Opus 4.5 specifically uses a global inference profile
+          // https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html
+          if (modelID.includes("claude-opus-4-5")) {
+            modelID = `global.${modelID}`
+            return sdk.languageModel(modelID)
+          }
+
           switch (regionPrefix) {
             case "us": {
               const modelRequiresPrefix = [
